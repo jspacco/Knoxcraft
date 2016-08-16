@@ -42,6 +42,8 @@ public class WorkThread extends Thread {
     private SpongeExecutorService minecraftSyncExecutor;
     private Logger log;
     
+    private Cause cause;
+    
     /**
      * Constructor
      * @param work This should be passed the same instance of the WorkMap class used in adding jobs.
@@ -63,6 +65,15 @@ public class WorkThread extends Thread {
         this.maxBuildHeight = maxBuildHeight;
         this.minecraftSyncExecutor = minecraftSyncExecutor;
         this.log = log;
+        
+        // The cause needs to have the plugin container as the root
+        // https://forums.spongepowered.org/t/root-of-setblock/11292/14
+        PluginContainer pluginContainer=Sponge.getPluginManager().getPlugin(TurtlePlugin.ID).get();
+        List<NamedCause> causeList=new LinkedList<>();
+        causeList.add(NamedCause.of(TurtlePlugin.ID, pluginContainer));
+        causeList.add(NamedCause.of(COMMAND_LINE, COMMAND_LINE_CAUSE));
+        
+        cause = Cause.builder().addAll(causeList).build();
     }
     
     /**
@@ -104,24 +115,14 @@ public class WorkThread extends Thread {
                         
                         if (block.getLoc().getY() < maxBuildHeight && block.getLoc().getY() > minBuildHeight)
                             try {
-                                log.trace("Before World set block");
-                                // The cause needs to have the plugin container as the root
-                                // https://forums.spongepowered.org/t/root-of-setblock/11292/14
-                                PluginContainer pluginContainer=Sponge.getPluginManager().getPlugin(TurtlePlugin.ID).get();
-                                List<NamedCause> causeList=new LinkedList<>();
-                                causeList.add(NamedCause.of(TurtlePlugin.ID, pluginContainer));
-                                causeList.add(NamedCause.of(COMMAND_LINE, COMMAND_LINE_CAUSE));
-                                
-                                
-                                Cause cause=Cause.builder().addAll(causeList).build();
                                 world.setBlock(block.getLoc(), minecraftBlock, false, cause);
-                                log.trace("After world set block");
                             } catch (Exception e) {
                                 log.error(e.getMessage());
                             }
                         else {
                             log.debug("Player attempted to build above or below allowed height. " + block.getLoc());
                         }
+                        
                         log.trace("Setting block at: " + block.getNewBlock().getId() + " " + block.getLoc());
                     }
                 }
