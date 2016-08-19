@@ -367,12 +367,14 @@ public class TurtlePlugin {
 							if (map == null) {
 								src.sendMessage(
 										Text.of(String.format("We cannot find any scripts for %s", src.getName())));
+							} else {
+		                         for (Entry<String, KCTScript> entry : map.entrySet()) {
+		                             log.debug(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage()));
+		                             src.sendMessage(Text
+		                                     .of(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage())));
+		                         }
 							}
-							for (Entry<String, KCTScript> entry : map.entrySet()) {
-								log.debug(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage()));
-								src.sendMessage(Text
-										.of(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage())));
-							}
+
 						}
 
 						return CommandResult.success();
