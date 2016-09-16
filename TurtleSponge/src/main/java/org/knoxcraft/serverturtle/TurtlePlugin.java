@@ -367,12 +367,14 @@ public class TurtlePlugin {
 							if (map == null) {
 								src.sendMessage(
 										Text.of(String.format("We cannot find any scripts for %s", src.getName())));
+							} else {
+		                         for (Entry<String, KCTScript> entry : map.entrySet()) {
+		                             log.debug(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage()));
+		                             src.sendMessage(Text
+		                                     .of(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage())));
+		                         }
 							}
-							for (Entry<String, KCTScript> entry : map.entrySet()) {
-								log.debug(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage()));
-								src.sendMessage(Text
-										.of(String.format("%s => %s", entry.getKey(), entry.getValue().getLanguage())));
-							}
+
 						}
 
 						return CommandResult.success();
@@ -622,14 +624,9 @@ public class TurtlePlugin {
 	    log.trace("Block Changed: " + event.getCause().root().toString());
 	    if (event.getCause().root() instanceof Player) {
 	        Player player = (Player) event.getCause().root();
-//	        log.info("A player attempted to change a block.");
-	        
-//	        for (Entry<String, Object> entry : event.getCause().getNamedCauses().entrySet()) {
-//	            log.info(entry.getKey() + " " + entry.getValue());
-//	        }
 	        
 	        if (!player.hasPermission("minecraft.command.op")) {
-	            log.info("Player blocked.");
+	            log.trace("Player: " + player.getName() + " blocked.");
 	            //if the player does not have the proper op permission, cancel the block break event. 
 	            event.setCancelled(true);
 	        }
