@@ -50,7 +50,8 @@ public class JavaPolyCompiler {
 	 * @return
 	 */
 	public static String[] compileAndRun(String programText, String className) {
-		InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+		Turtle3D.turtleMap.clear();
+	    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
 		String[] result = new String[6];
 		// total success is false until we are sure everything worked
 		result[TOTAL_SUCCESS] = "false";
