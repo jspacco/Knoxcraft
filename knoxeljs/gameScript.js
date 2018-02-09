@@ -235,8 +235,10 @@ function running() {
 // Updates the lookLocation indicator when the mouse is clicked ("fired")
 game.on('fire', function (target, state) {
   // Purely for debugging purposes
+  /*
   document.getElementById("looklocation").innerHTML = "(" + highlightPos + ")";
   scriptLaunchLocation = highlightPos;
+  */
 });
 
 function uploadCode(evt) {
@@ -252,6 +254,16 @@ function updateCode(e) {
   catch(err) {
     setStatus("ERROR READING FILE");
   }
+}
+
+function loadLandscape(evt) {
+  setStatus("Loading landscape...");
+  readFile(evt.target.files[0], updateLandscape);
+}
+
+function updateLanscape(e) {
+  var result = e.target.result;
+  console.log(result);
 }
 
 
@@ -285,11 +297,13 @@ function updateJSON(e) {
 // Called once the JSON has been loaded
 window.extractCommandsFromJSON = function(jsontext) {
   var json = JSON.parse(jsontext);
+  // log how many commands we're getting
+  console.log(Object.keys(json).length);
   // Sets the current script to be the JSON's list of commands
   curScript = json.commands;
   if (curScript != null) {
-    goToTab("gameTab");
     setStatus(json.scriptname + " has been loaded successfully!");
+    goToTab("gameTab");
     if (document.getElementById("autoRunScript").checked) {
       runScript();
     }
@@ -344,6 +358,12 @@ var runScript = function() {
       case "down":
         down(cmd.args);
         break;
+      case "turnRight":
+        turnRight(cmd.args);
+        break;
+      case "turnLeft":
+        turnLeft(cmd.args);
+        break;
       case "turn":
         turnCommand(cmd.args);
         break;
@@ -386,6 +406,9 @@ function undo() {
 
 // Turns the turtle deg degrees and bounds the result between 0 and 360
 function turn(deg) {
+  while (deg<0) {
+    deg+=360;
+  }
   turnAngle = (turnAngle + (deg % 360) + 360) % 360 ;
 }
 
@@ -451,6 +474,14 @@ function down(args) {
   } else {
     position[1] -= dist;
   }
+}
+
+function turnRight(args) {
+  turn(args.degrees);
+}
+
+function turnLeft(args) {
+  turn(-1 * args.degrees);
 }
 
 function turnCommand(args) {
@@ -563,6 +594,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // TODO: test DOMContentLoaded with IE8 (does anyone still use IE8?)
   // DOMContentLoaded may not be supported by IE8
   document.getElementById("runscript").addEventListener("click", runScript);
+  document.getElementById("loadLandscapeButton").addEventListener('change', loadLandscape, false);
   document.getElementById("codeUploadButton").addEventListener('change', uploadCode, false);
   document.getElementById("JSONUploadButton").addEventListener('change', parseJSON, false);
   document.getElementById("downloadButton").addEventListener('click', downloadEditorCode);
@@ -570,7 +602,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById("undo").addEventListener("click", undo);
   document.getElementById("compileandrun").addEventListener("click", function() {
     running();
-    downloadEditorCode();
+    //downloadEditorCode();
     editor.getSession().removeMarker(curACEErrorMarker);
     JavaPoly.type('org.knoxcraft.javapoly.JavaPolyCompiler').then(function(JavaPolyCompiler){
       // constants that tell us where things are in the array returned
@@ -584,6 +616,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       var COMPILE_SUCCESS=4;
       var COMPILE_MESSAGE=5;
       var code = editor.getValue();
+      console.log(code);
       var className;
       var userClassName = document.getElementById("classname").value;
       if (userClassName != null && userClassName != "") {
@@ -591,16 +624,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
       } else {
         className = getClassName(code);
       }
+      // XXX: Hack alert! We can't seem to load new classfiles, so we're
+      // renaming the class every time using a timestamp.
+      var newClassName=className+''+(new Date().getTime());
+      code=code.replace('class '+className, 'class '+newClassName);
+      console.log("new class name is "+getClassName(code));
+
       // TODO: someday, somehow timeout within JS (using webworkers or something else)
       // if this call takes too long or triggers an infinite loop
-      JavaPolyCompiler.compileAndRun(code, className).then(function(result){
+      JavaPolyCompiler.compileAndRun(code, newClassName).then(function(result){
+        console.log("number of json commands: "+Object.keys(result).length);
         console.log("result is "+result);
         if (result[TOTAL_SUCCESS]==='true'){
           // success
           extractCommandsFromJSON(result[JSON_RESULT]);
           setMessage("successfully compiled and loaded code!");
         } else if (result[COMPILE_SUCCESS]==='true' && result[RUNTIME_SUCCESS]==="false"){
-	  // runtime error
+	         // runtime error
           console.log(result[RUNTIME_MESSAGE]);
           setMessage("runtime error:<br>"+result[RUNTIME_MESSAGE]);
           highlightErrors(result[COMPILE_MESSAGE]);
@@ -618,7 +658,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
   }, function(error) {
        setMessage("A very bad error occurred (JavaPoly isn't working or we can't find an essential dependency- probably JavaPolyCompiler). There is nothing that you can do. I'm sorry.")
-});
+     });
 });
 
 // No tabs are open by default.
