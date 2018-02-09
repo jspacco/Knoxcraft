@@ -257,13 +257,19 @@ function updateCode(e) {
 }
 
 function loadLandscape(evt) {
+  console.log("loading landscape");
   setStatus("Loading landscape...");
   readFile(evt.target.files[0], updateLandscape);
 }
 
-function updateLanscape(e) {
-  var result = e.target.result;
-  console.log(result);
+function updateLandscape(e) {
+  try {
+    var result = e.target.result;
+    console.log(result);
+  }
+  catch(err){
+    setStatus("ERROR READING LANDSCAPE FILE");
+  }
 }
 
 
