@@ -256,8 +256,10 @@ function updateCode(e) {
   }
 }
 
+// Upload landscape files
+// These are JSON files that describe a landscape
 function loadLandscape(evt) {
-  console.log("loading landscape");
+  //console.log("loading landscape");
   setStatus("Loading landscape...");
   readFile(evt.target.files[0], updateLandscape);
 }
@@ -265,7 +267,18 @@ function loadLandscape(evt) {
 function updateLandscape(e) {
   try {
     var result = e.target.result;
-    console.log(result);
+    var obj = JSON.parse(result);
+    blocks = obj.blocks;
+    for (var x = 0; x < blocks.length; x++) {
+      for (var z = 0; z < blocks[x].length; z++){
+        for (var y = 0; y < blocks[x][z].length; y++){
+          console.log(blocks[x][z][y]);
+          console.log(materialNames[blocks[x][z][y]]);
+          game.setBlock(new Array(x, y+1, z+10), materialNames[blocks[x][z][y]]);
+        }
+      }
+    }
+    setStatus("");
   }
   catch(err){
     setStatus("ERROR READING LANDSCAPE FILE");
