@@ -792,7 +792,7 @@ if (splits.length>1) {
 }
 //console.log('tab is '+tab);
 if (tab=='') {
-  goToTab("javaTab");
+  goToTab("gameTab");
 } else {
   goToTab(tab+"Tab");
 }
