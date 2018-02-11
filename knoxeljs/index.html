@@ -476,12 +476,50 @@ print(t.toJson())
 
 <div id="Game" class="tabcontent">
   <div>
-    <p>Script Status: <span id="scriptstatus">No script loaded</span></p>
+    <p>Status: <span id="scriptstatus">No script or landscape loaded</span></p>
+  </div>
+  <div>
+    <p>
+      Scripts:
+    </p>
     <button type="button" class="button" id="runscript">Run Current Script</button>
     <button type="button" class="button" id="undo">Undo Last Script</button>
-    <input type="file" id="loadLandscapeButton" class="inputfile">
-    <label for="loadLandscapeButton">Load Lanscape</label>
+  </div>
+  <div>
+    <p>Lanscapes</p>
+    <table>
+      <tr>
+        <th>length</th>
+        <th>width</th>
+        <th>height</th>
+      </tr>
+      <tr>
+        <td id="length"></td>
+        <td id="width"></td>
+        <td id="height"></td>
+      </tr>
+    </table>
+    <div>
+      <table>
+        <tr>
+          <th>x</th>
+          <th>y</th>
+          <th>z</th>
+        </tr>
+        <tr>
+          <td id="x"></td>
+          <td id="y"></td>
+          <td id="z"></td>
+        </tr>
+      </table>
+    </div>
+    <p>
+      <input type="file" id="loadLandscapeButton" class="inputfile">
+      <label for="loadLandscapeButton">Load Lanscape File</label>
+    </p>
+<!--
     <p>Script Launch Location: <span id="looklocation">(0,0,0)</span></p>
+-->
   </div>
 </div>
 

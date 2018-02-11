@@ -117,17 +117,79 @@ var game = createGame({
   materialFlatColor: false,
   texturePath: '/textures/'
 });
+
+function displayBlockLocation(x, y, z){
+  document.getElementById('x').innerHTML = x;
+  document.getElementById('y').innerHTML = y;
+  document.getElementById('z').innerHTML = z;
+}
+
+// Try to set up click handlers
+var createReach = require('voxel-reach');
+reach = createReach(game, {reachDistance: 8});
+
+reach.on('use', function(target) {
+  // right-click
+  if (target){
+    var x = target.voxel[0];
+    var y = target.voxel[1];
+    var z = target.voxel[2];
+    console.log("raw x,y,z = ("+x+","+y+","+z+")");
+  }
+});
+
+reach.on('mining', function(target) {
+  // left-click
+  if (target){
+    // only update the x,y,z table if we click a block
+    // that is part of the landscape, i.e. is inside our
+    // length,width,height range
+    var minx = 0;
+    var maxx = parseInt(document.getElementById("width").innerHTML);
+    var miny = 1;
+    var maxy = parseInt(document.getElementById("height").innerHTML) + 1;
+    // z coords are reversed because we are looking in the -z direction
+    var minz = -1 * parseInt(document.getElementById("length").innerHTML);
+    var maxz = 0;
+
+    var x = target.voxel[0];
+    var y = target.voxel[1];
+    var z = target.voxel[2];
+    console.log("raw x,y,z = ("+x+","+y+","+z+")");
+    if (minx <= x && x < maxx &&
+      miny <= y && y < maxy &&
+      // again, z coords are reversed
+      minz < z && z <= maxz)
+    {
+        displayBlockLocation(x, y-1, -z);
+        console.log("x = "+x+", between "+minx+","+maxx+
+          "\ny = "+y+", between "+miny+","+maxy+
+          "\nz = "+z+", between "+minz+","+maxz);
+    }
+  }
+});
+
 // TODO: should we attach this to a div?
 game.appendTo(document.getElementById("Game"));
 
 // Set origin to RED_WOOL
-game.setBlock(new Array(0, 0, 0), materialNames['RED_WOOL']);
+// Put an L shape with black wool on the X axis
+// and blue wool on the Z axis, so that we know where
+// the origin is, and what direction shapes will go in.
+game.setBlock(new Array(-1, 0, 1), materialNames['RED_WOOL']);
+for (var x=0; x<=3; x++){
+  game.setBlock(new Array(x, 0, 1), materialNames['BLACK_WOOL']);
+}
+for (var z=0; z<=3; z++){
+  game.setBlock(new Array(-1, 0, -z), materialNames['BLUE_WOOL']);
+}
+
 
 // Now we have a world, but no player. The following code fixes that
 var createPlayer = require('voxel-player')(game);
-var substack = createPlayer('substack.png');
-substack.possess();
-substack.position.set(0,5,0);
+var player = createPlayer('substack.png');
+player.possess();
+player.position.set(0,5,5);
 
 // I believe I can fly!
 var fly = require('voxel-fly');
@@ -137,7 +199,7 @@ makeFly(game.controls.target());
 // highlight blocks when you look at them
 var highlight = require('voxel-highlight')
 var highlightPos
-var hl = game.highlighter = highlight(game, { color: 0x00ff00 })
+var hl = game.highlighter = highlight(game, { color: 0xff0000 })
 hl.on('highlight', function (voxelPos) { highlightPos = voxelPos })
 hl.on('remove', function (voxelPos) { highlightPos = null })
 
@@ -258,6 +320,7 @@ function updateCode(e) {
 
 // Upload landscape files
 // These are JSON files that describe a landscape
+// They can be produced from 3D arrays in various programming languages
 function loadLandscape(evt) {
   //console.log("loading landscape");
   setStatus("Loading landscape...");
@@ -268,13 +331,19 @@ function updateLandscape(e) {
   try {
     var result = e.target.result;
     var obj = JSON.parse(result);
+    console.log("length = "+obj.length);
+    console.log("width = "+obj.width);
+    console.log("height = "+obj.height);
+    document.getElementById('length').innerHTML = obj.length;
+    document.getElementById('width').innerHTML = obj.width;
+    document.getElementById('height').innerHTML = obj.height;
     blocks = obj.blocks;
-    for (var x = 0; x < blocks.length; x++) {
-      for (var z = 0; z < blocks[x].length; z++){
-        for (var y = 0; y < blocks[x][z].length; y++){
-          console.log(blocks[x][z][y]);
-          console.log(materialNames[blocks[x][z][y]]);
-          game.setBlock(new Array(x, y+1, z+10), materialNames[blocks[x][z][y]]);
+    for (var z = 0; z < blocks.length; z++) {
+      for (var x = 0; x < blocks[z].length; x++){
+        for (var y = 0; y < blocks[z][x].length; y++){
+          console.log("("+x+","+y+","+z+") = "+
+            blocks[z][x][y] +" is "+materialNames[blocks[z][x][y]]);
+          game.setBlock(new Array(x, y+1, -z), materialNames[blocks[z][x][y]]);
         }
       }
     }
@@ -605,6 +674,39 @@ function highlightErrors(compilerError) {
   var range = new Range(lineStart, colStart, lineEnd, colEnd);
   curACEErrorMarker = editor.getSession().addMarker(range,"aceErrorMarker", "text");
 }
+
+// WAILA
+// TODO: create the waila as a function that updates
+// the text of an HTML node
+// function createNode() {
+//   var newnode = document.createElement('span');
+//   newnode.setAttribute('id', 'waila');
+//   newnode.setAttribute('style', 'background-image: linear-gradient(rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.6) 100%);\n'+
+//     'visibility: hidden;\n'+
+//     'color: white;\n'+
+//     'font-size: 18pt;');
+//
+//   newnode.textContent = 'asdf';
+//
+//   var container = document.createElement('div');
+//
+//   container.setAttribute('style', 'position: absolute;\n'+
+//     'top: 0px;\n'+
+//     'width: 100%;\n'+
+//     'text-align: center;');
+//
+//   container.appendChild(newnode);
+//   document.body.appendChild(container);
+//   return newnode;
+// }
+//
+// // global variable for WAILA
+// var node = createNode();
+//
+// // updating waila
+// function updateWaila(message) {
+//   node.textContent = message;
+// }
 
 //////////////////////////////////// Setup HTML Page /////////////////////////////////
 
