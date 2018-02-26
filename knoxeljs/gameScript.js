@@ -14,6 +14,19 @@ function addMat(name, filename) {
    */
   materialNames[name] = allMaterials.length;
 }
+// TODO Add the following:
+/*
+ * OAK_SAPLING
+ * SPRUCE_SAPLING
+ * BIRCH_SAPLING
+ * JUNGLE_SAPLING
+ * ACACIA_SAPLING
+ * DARK_OAK_SAPLING
+ * FLOWING_WATER
+ * STILL_WATER
+ * FLOWING_LAVA
+ * STILL_LAVA
+ */
 
 addMat("STONE", "stone");
 addMat("GRANITE", "stone_granite");
@@ -32,43 +45,25 @@ addMat("SPRUCE_WOOD_PLANK", "planks_spruce");
 addMat("BIRCH_WOOD_PLANK", "planks_birch");
 addMat("JUNGLE_WOOD_PLANK", "planks_jungle");
 addMat("ACACIA_WOOD_PLANK", "planks_acacia");
-addMat("BIRCH_WOOD_PLANK", "planks_birch");
 addMat("DARK_OAK_WOOD_PLANK", "planks_big_oak");
-// TODO Add the following:
-/*
- * OAK_SAPLING
- * SPRUCE_SAPLING
- * BIRCH_SAPLING
- * JUNGLE_SAPLING
- * ACACIA_SAPLING
- * DARK_OAK_SAPLING
- * FLOWING_WATER
- * STILL_WATER
- * FLOWING_LAVA
- * STILL_LAVA
- */
 addMat("BEDROCK", "bedrock");
 addMat("SAND", "sand");
 addMat("RED_SAND", "red_sand");
 addMat("GRAVEL", "gravel");
-addMat("GOLD_ORE", "gold_ore");
-addMat("IRON_ORE", "iron_ore");
-addMat("COAL_ORE", "coal_ore");
+
 addMat("OAK_WOOD", ["log_oak", "log_oak", "log_oak_top", "log_oak", "log_oak", "log_oak_top"]);
 addMat("SPRUCE_WOOD", ["log_spruce", "log_spruce", "log_spruce_top", "log_spruce", "log_spruce", "log_spruce_top"]);
 addMat("BIRCH_WOOD", ["log_birch", "log_birch", "log_birch_top", "log_birch", "log_birch", "log_birch_top"]);
 addMat("JUNGLE_WOOD", ["log_jungle", "log_jungle", "log_jungle_top", "log_jungle", "log_jungle", "log_jungle_top"]);
-// TODO: Add leaves
+
 addMat("SPONGE", "sponge");
 addMat("WET_SPONGE", "sponge_wet");
-// TODO: Add GLASS
-addMat("LAPIS_LAZULI_ORE", "lapis_ore");
-addMat("LAPIS_LAZULI_BLOCK", "lapis_block");
-// TODO Add dispenser
+
+
 addMat("SANDSTONE", ["sandstone_normal", "sandstone_normal", "sandstone_top", "sandstone_bottom", "sandstone_normal", "sandstone_normal"]);
 addMat("CHISELED_SANDSTONE", ["sandstone_carved", "sandstone_carved", "sandstone_top", "sandstone_bottom", "sandstone_carved", "sandstone_carved"]);
 addMat("SMOOTH_SANDSTONE", ["sandstone_smooth", "sandstone_smooth", "sandstone_top", "sandstone_bottom", "sandstone_smooth", "sandstone_smooth"]);
-// TODO add noteblock
+
 addMat("WHITE_WOOL", "wool_colored_white");
 addMat("ORANGE_WOOL", "wool_colored_orange");
 addMat("MAGENTA_WOOL", "wool_colored_magenta");
@@ -85,24 +80,50 @@ addMat("BROWN_WOOL", "wool_colored_brown");
 addMat("GREEN_WOOL", "wool_colored_green");
 addMat("RED_WOOL", "wool_colored_red");
 addMat("BLACK_WOOL", "wool_colored_black");
+
 addMat("GOLD_BLOCK", "gold_block");
 addMat("IRON_BLOCK", "iron_block");
+addMat("EMERALD_BLOCK", "emerald_block");
+addMat("DIAMOND_BLOCK", "diamond_block");
+addMat("LAPIS_LAZULI_BLOCK", "lapis_block");
+
+
 addMat("BRICKS", "brick");
 addMat("TNT", ["tnt_side", "tnt_side", "tnt_top", "tnt_bottom", "tnt_side", "tnt_side"]);
 addMat("BOOKSHELF", "bookshelf");
+
 addMat("MOSS_STONE", "cobblestone_mossy");
 addMat("OBSIDIAN", "obsidian");
-addMat("MONSTER_SPAWNER", "mob_spawner");
+
 addMat("DIAMOND_ORE", "diamond_ore");
-addMat("DIAMOND_BLOCK", "diamond_block");
+addMat("EMERALD_ORE", "emerald_ore");
+addMat("GOLD_ORE", "gold_ore");
+addMat("IRON_ORE", "iron_ore");
+addMat("COAL_ORE", "coal_ore");
+addMat("LAPIS_LAZULI_ORE", "lapis_ore");
+addMat("QUARTZ_BLOCK", ["quartz_block_side", "quartz_block_side", "quartz_block_top", "quartz_block_bottom", "quartz_block_side", "quartz_block_side"]);
+
+addMat("MONSTER_SPAWNER", "mob_spawner");
 addMat("CRAFTING_TABLE", ["crafting_table_side", "crafting_table_side", "crafting_table_top", "crafting_table_top", "crafting_table_side", "crafting_table_side"]);
 addMat("FARMLAND", "farmland_dry");
-// TODO Add Furnace
+
 addMat("SNOW", ["grass_side_snowed", "grass_side_snowed", "snow", "dirt", "grass_side_snowed", "grass_side_snowed"]);
 addMat("ICE", "ice_packed");
 addMat("SNOW_BLOCK", "snow");
 addMat("CACTUS", ["cactus_side", "cactus_side", "cactus_top", "cactus_top", "cactus_side", "cactus_side"]);
 addMat("CLAY", "clay");
+
+addMat("GLASS", "glass");
+addMat("STILL_LAVA", "lava_still");
+addMat("STILL_WATER", "water_still");
+addMat("FLOWING_LAVA", "lava_flow");
+addMat("FLOWING_WATER", "water_flow");
+
+// TODO Add Furnace
+// TODO Add leaves
+// TODO Add dispenser
+// TODO add noteblock
+
 
 
 
@@ -675,38 +696,6 @@ function highlightErrors(compilerError) {
   curACEErrorMarker = editor.getSession().addMarker(range,"aceErrorMarker", "text");
 }
 
-// WAILA
-// TODO: create the waila as a function that updates
-// the text of an HTML node
-// function createNode() {
-//   var newnode = document.createElement('span');
-//   newnode.setAttribute('id', 'waila');
-//   newnode.setAttribute('style', 'background-image: linear-gradient(rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.6) 100%);\n'+
-//     'visibility: hidden;\n'+
-//     'color: white;\n'+
-//     'font-size: 18pt;');
-//
-//   newnode.textContent = 'asdf';
-//
-//   var container = document.createElement('div');
-//
-//   container.setAttribute('style', 'position: absolute;\n'+
-//     'top: 0px;\n'+
-//     'width: 100%;\n'+
-//     'text-align: center;');
-//
-//   container.appendChild(newnode);
-//   document.body.appendChild(container);
-//   return newnode;
-// }
-//
-// // global variable for WAILA
-// var node = createNode();
-//
-// // updating waila
-// function updateWaila(message) {
-//   node.textContent = message;
-// }
 
 //////////////////////////////////// Setup HTML Page /////////////////////////////////
 
