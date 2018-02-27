@@ -359,12 +359,12 @@ function updateLandscape(e) {
     document.getElementById('width').innerHTML = obj.width;
     document.getElementById('height').innerHTML = obj.height;
     blocks = obj.blocks;
-    for (var z = 0; z < blocks.length; z++) {
-      for (var x = 0; x < blocks[z].length; x++){
-        for (var y = 0; y < blocks[z][x].length; y++){
+    for (var x = 0; x < blocks.length; x++) {
+      for (var z = 0; z < blocks[z].length; z++){
+        for (var y = 0; y < blocks[x][z].length; y++){
           console.log("("+x+","+y+","+z+") = "+
-            blocks[z][x][y] +" is "+materialNames[blocks[z][x][y]]);
-          game.setBlock(new Array(x, y+1, -z), materialNames[blocks[z][x][y]]);
+            blocks[x][z][y] +" is "+materialNames[blocks[x][z][y]]);
+          game.setBlock(new Array(x, y+1, -z), materialNames[blocks[x][z][y]]);
         }
       }
     }
