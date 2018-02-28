@@ -352,16 +352,31 @@ function updateLandscape(e) {
   try {
     var result = e.target.result;
     var obj = JSON.parse(result);
+    var length = parseInt(obj.length);
+    var width = parseInt(obj.width);
+    var height = parseInt(obj.height);
     console.log("length = "+obj.length);
     console.log("width = "+obj.width);
     console.log("height = "+obj.height);
     document.getElementById('length').innerHTML = obj.length;
     document.getElementById('width').innerHTML = obj.width;
     document.getElementById('height').innerHTML = obj.height;
-    blocks = obj.blocks;
-    for (var x = 0; x < blocks.length; x++) {
-      for (var z = 0; z < blocks[z].length; z++){
-        for (var y = 0; y < blocks[x][z].length; y++){
+    var blocks = obj.blocks;
+    //for (var x = 0; x < blocks.length; x++) {
+      //for (var z = 0; z < blocks[z].length; z++){
+    console.log(blocks);
+    console.log(blocks.length);
+    console.log(blocks[0].length);
+    console.log(blocks[0][0].length);
+    //for (var x = 0; x < blocks.length; x++) {
+    for (var x = 0; x < width; x++) {
+      console.log(blocks[x]);
+      //for (var z = 0; z < blocks[z].length; z++){
+      for (var z = 0; z < length; z++){
+        console.log(blocks[x][z]);
+        //for (var y = 0; y < blocks[x][z].length; y++){
+        for (var y = 0; y < height; y++){
+          console.log(blocks[x][z][y]);
           console.log("("+x+","+y+","+z+") = "+
             blocks[x][z][y] +" is "+materialNames[blocks[x][z][y]]);
           game.setBlock(new Array(x, y+1, -z), materialNames[blocks[x][z][y]]);
@@ -372,6 +387,7 @@ function updateLandscape(e) {
   }
   catch(err){
     setStatus("ERROR READING LANDSCAPE FILE");
+    console.log(err);
   }
 }
 
