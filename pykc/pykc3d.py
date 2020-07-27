@@ -40,16 +40,13 @@ def to_json(grid):
     for x in range(len(grid)):
         ylist = []
         for z in range(len(grid[0])):
-            # TODO handle None values and ensure double quotes
-            #line = '%s%s%s[ %s ]' % (TAB, TAB, TAB, ', '.join(grid[x][z]))
             line = '%s%s%s[ %s ]' % (TAB, TAB, TAB, quote(grid[x][z]))
             ylist.append(line)
         xlist.append(',\n'.join(ylist))
     res += '%s%s[\n' % (TAB, TAB)
     res += ('\n%s%s],\n%s%s[\n' % (TAB, TAB, TAB, TAB)).join(xlist)
     res += '\n%s%s]\n' % (TAB, TAB)
-    
-    # OK
+
     res += '%s]\n' % (TAB)
     res += '}'
     return res
@@ -59,7 +56,6 @@ def main():
     grid = scene3d(3, 4, 5)
     grid[0][0][0] = None
     json = to_json(grid)
-    
     print(json)
 
 
