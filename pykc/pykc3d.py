@@ -7,7 +7,8 @@ def scene3d(width, height, length):
 
 
 def quote(blocks):
-    return '"' + '", "'.join(blocks) + '"'
+    new_blocks = ['AIR' if x is None else x for x in blocks]
+    return '"' + '", "'.join(new_blocks) + '"'
 
 
 def to_json(grid):
@@ -56,7 +57,7 @@ def to_json(grid):
 
 def main():
     grid = scene3d(3, 4, 5)
-
+    grid[0][0][0] = None
     json = to_json(grid)
     
     print(json)
