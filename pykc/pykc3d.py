@@ -1,47 +1,6 @@
 from blocktype import BlockType as bt
 TAB = '  '
 
-def to_json_old(grid):
-    '''
-     {
-         "length" : 2,
-         "width"  : 3,
-         "height" : 4,
-         "blocks" : [
-             [
-                 ["stone","stone","stone","stone"],
-                 ["DIRT","DIRT","DIRT","DIRT"],
-                 ["GRASS","GRASS","GRASS","GRASS"]
-             ],
-             [
-                 ["AIR","AIR","AIR","AIR"],
-                 ["BEDROCK","BEDROCK","BEDROCK","BEDROCK"],
-                 ["GLASS","GLASS","GLASS","GLASS"]
-             ]
-         ]
-     }
-'''
-    length = len(grid)
-    width = len(grid[0])
-    height = len(grid[0][0])
-    res = '''{{
-    "length" : {},
-    "width" : {},
-    "height" : {},
-    "blocks" :
-'''.format(length, width, height)
-    blocks = []
-    for row in grid:
-        thing = []
-        for col in row:
-            foo = []
-            for s in col:
-                foo.append('"{}"'.format(s))
-            thing.append('[' + ','.join(foo) + ']')
-        blocks.append('[\n' + ',\n'.join(thing) + ']\n')
-    res += '[\n' + ',\n'.join(blocks) + ']\n}'
-    return res
-
 
 def scene3d(width, height, length):
     return [[[bt.air for _ in range(length)] for _ in range(height)] for _ in range(width)]
